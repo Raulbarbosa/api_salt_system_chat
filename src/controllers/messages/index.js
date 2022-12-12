@@ -3,21 +3,21 @@ const { v4: uuidv4 } = require('uuid');
 
 const createMessage = async (req, res) => {
     const { target, content } = req.body;
-    const { username } = req.user;
+    const { id } = req.user;
 
-    if (!target || !content || !username) {
+    if (!target || !content || !id) {
         return res.status(400).json("Please fill all the fields.");
     }
 
     try {
 
-        const sender = await knex('users').where({ username }).first();
+        const sender = await knex('users').where({ id }).first();
 
         if (!sender) {
             return res.stats(400).json("Onwer of the message not found.");
         }
 
-        const recipient = await knex('users').where({ username: target }).first();
+        const recipient = await knex('users').where({ email: target }).first();
 
         if (!recipient) {
             return res.status(400).json("Receiver of the message not found.")
@@ -38,11 +38,11 @@ const createMessage = async (req, res) => {
 }
 
 const getAllMessages = async (req, res) => {
-    const { username, id } = req.user;
+    const { id } = req.user;
 
     try {
 
-        const user = await knex('users').where({ username }).first();
+        const user = await knex('users').where({ id }).first();
 
         if (!user) {
             return res.status(400).json({ message: "User not found." })
@@ -63,18 +63,18 @@ const getAllMessages = async (req, res) => {
 }
 
 const getDirectMessage = async (req, res) => {
-    const { username, id } = req.user;
-    const { username: target } = req.params;
+    const { id } = req.user;
+    const { email: target } = req.params;
 
     try {
 
-        const user = await knex('users').where({ username }).first();
+        const user = await knex('users').where({ id }).first();
 
         if (!user) {
             return res.status(400).json({ message: "User not found." })
         }
 
-        const targetFound = await knex('users').where({ username: target }).first();
+        const targetFound = await knex('users').where({ email: target }).first();
 
         if (!user) {
             return res.status(400).json({ message: "User not found." })

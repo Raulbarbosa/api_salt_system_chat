@@ -3,30 +3,31 @@ const bcrypt = require('bcrypt');
 const knex = require('../../connection');
 
 const login = async (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
         return res.status(400).json({ "message": "Please fill all the fields." });
     }
 
     try {
 
-        const user = await knex('users').where({ username }).first();
+        const user = await knex('users').where({ email }).first();
 
         if (!user) {
-            return res.status(400).json({ message: "Username or password invalid." })
+            return res.status(400).json({ message: "email or password invalid." })
         }
 
         const passwordVerified = await bcrypt.compare(password, user.password);
 
         if (!passwordVerified) {
-            return res.status(400).json({ message: "Username or password invalid." })
+            return res.status(400).json({ message: "email or password invalid." })
         }
 
         const { password: _, ...userLogin } = user;
 
         const token = jwt.sign({
             id: user.id,
-            username: user.username
+            email: user.email,
+            name: user.name
         }, process.env.PRIVATEKEY)
 
         return res.status(200).json({

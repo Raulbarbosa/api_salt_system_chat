@@ -16,7 +16,7 @@ routes.get("/users", getAllUsers);
 
 routes.post('/messages', createMessage);
 routes.get('/messages', getAllMessages);
-routes.get('/messages/:username', getDirectMessage);
+routes.get('/messages/:email', getDirectMessage);
 
 
 module.exports = routes;

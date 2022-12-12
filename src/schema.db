@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS users(
+	id text UNIQUE NOT NULL,
+  	name text NOT NULL,
+  	email text UNIQUE NOT NULL,
+  	create_at timestamp DEFAULT NOW(),
+  	password text NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS messages(
+  	id text UNIQUE NOT NULL,
+  	content text NOT NULL,
+  	create_at timestamp DEFAULT NOW(),
+  	sender_id text REFERENCES users(id) not null,
+    recipient_id text REFERENCES users(id) not null,
+  	updated_at timestamp
+);
